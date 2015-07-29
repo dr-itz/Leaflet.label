@@ -16,11 +16,9 @@ L.Path.include({
 	},
 
 	setLabelNoHide: function (noHide) {
-		if (this.label.options.noHide === noHide) {
+		if (!this.label._setLabelNoHide(noHide)) {
 			return;
 		}
-
-		this.label.options.noHide = noHide;
 
 		if (noHide) {
 			this._removeLabelRevealHandlers();

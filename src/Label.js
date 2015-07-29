@@ -201,7 +201,9 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 	},
 
 	_initInteraction: function () {
-		if (!this.options.clickable) { return; }
+		if (!this.options.clickable || !this.options.noHide || this._interactionsSet) {
+			return;
+		}
 
 		var container = this._container,
 			events = ['dblclick', 'mousedown', 'mouseover', 'mouseout', 'contextmenu'];
@@ -212,10 +214,11 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 		for (var i = 0; i < events.length; i++) {
 			L.DomEvent.on(container, events[i], this._fireMouseEvent, this);
 		}
+		this._interactionsSet = true;
 	},
 
 	_removeInteraction: function () {
-		if (!this.options.clickable) { return; }
+		if (!this._interactionsSet) { return; }
 
 		var container = this._container,
 			events = ['dblclick', 'mousedown', 'mouseover', 'mouseout', 'contextmenu'];
@@ -226,6 +229,19 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 		for (var i = 0; i < events.length; i++) {
 			L.DomEvent.off(container, events[i], this._fireMouseEvent, this);
 		}
+		this._interactionsSet = false;
+	},
+
+	_setLabelNoHide: function (noHide) {
+		if (this.options.noHide === noHide) {
+			return false;
+		}
+		this.options.noHide = noHide;
+		if (this._container) {
+			this._initInteraction();
+		}
+
+		return true;
 	},
 
 	_onMouseClick: function (e) {

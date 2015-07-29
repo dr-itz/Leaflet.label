@@ -17,11 +17,9 @@ L.BaseMarkerMethods = {
 	},
 
 	setLabelNoHide: function (noHide) {
-		if (this.label.options.noHide === noHide) {
+		if (!this.label._setLabelNoHide(noHide)) {
 			return;
 		}
-
-		this.label.options.noHide = noHide;
 
 		if (noHide) {
 			this._removeLabelRevealHandlers();
@@ -56,7 +54,7 @@ L.BaseMarkerMethods = {
 		}
 		this.label.setContent(content);
 
-		if (!this._hasLabelHandlers ) {
+		if (!this._hasLabelHandlers) {
 			if (!this.label.options.noHide) {
 				this._addLabelRevealHandlers();
 			}
