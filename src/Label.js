@@ -5,6 +5,7 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 	options: {
 		className: '',
 		clickable: false,
+		passClickToSource: false,
 		direction: 'right',
 		noHide: false,
 		offset: [12, -15], // 6 (width of the label triangle) + 6 (padding)
@@ -228,6 +229,13 @@ L.Label = (L.Layer ? L.Layer : L.Class).extend({
 	},
 
 	_onMouseClick: function (e) {
+		if (this.options.passClickToSource) {
+			this._source.fire(e.type, {
+				originalEvent: e
+			});
+			return;
+		}
+
 		if (this.hasEventListeners(e.type)) {
 			L.DomEvent.stopPropagation(e);
 		}
